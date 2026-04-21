@@ -1,6 +1,16 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
+if ! command -v node &> /dev/null; then
+  echo "错误: 未找到 Node.js"
+  echo ""
+  echo "请先安装 Node.js:"
+  echo "  macOS: brew install node"
+  echo "  Ubuntu: sudo apt-get install nodejs"
+  echo "  Windows: https://nodejs.org/"
+  exit 1
+fi
+
 echo "检查 JavaScript 语法..."
 node -e "
 var fs = require('fs');
