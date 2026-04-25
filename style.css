@@ -1,0 +1,235 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+h1 {
+  color: #ff6b6b;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 0 #fff;
+}
+.info {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  color: #555;
+}
+.info span {
+  background: #fff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+#eliminateBtn {
+  background: #ff6b6b;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+#eliminateBtn:hover {
+  background: #ff4757;
+}
+#testEliminateBtn {
+  background: #ff9800;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+#testEliminateBtn:hover {
+  background: #f57c00;
+}
+#sfxToggleBtn {
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+#sfxToggleBtn:hover {
+  background: #5a52d6;
+}
+#gameContainer {
+  background: rgba(255,255,255,0.8);
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+#boardWithAxes {
+  display: grid;
+  grid-template-columns: 28px auto;
+  grid-template-rows: 28px auto;
+  gap: 4px;
+  align-items: start;
+}
+#axisSpacer {
+  grid-column: 1;
+  grid-row: 1;
+}
+#xAxis {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  gap: 2px;
+  padding: 0 3px;
+}
+#yAxis {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  grid-template-rows: repeat(10, 40px);
+  gap: 2px;
+  padding: 3px 0;
+}
+.axis-label {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #555;
+  font-weight: bold;
+  user-select: none;
+}
+#xAxis .axis-label {
+  justify-self: center;
+}
+#yAxis .axis-label {
+  align-self: center;
+  justify-self: center;
+}
+#gameBoard {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  grid-template-rows: repeat(10, 40px);
+  gap: 2px;
+  background: #ddd;
+  border: 3px solid #ff9a9e;
+  border-radius: 10px;
+  position: relative;
+}
+.cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  background: #fff;
+  transition: transform 0.5s ease, background 0.2s ease, box-shadow 0.2s ease;
+  user-select: none;
+  transform-origin: center center;
+}
+.cell:not(.empty):hover {
+  background: #ffe066;
+  transform: scale(1.5);
+  z-index: 2;
+}
+.cell.selected {
+  background: #b3d9ff;
+  box-shadow: inset 0 0 0 2px #2196f3;
+}
+.cell.empty {
+  background: transparent;
+  cursor: default;
+}
+.cell.empty:hover {
+  transform: none;
+}
+.line {
+  position: absolute;
+  background: #2196f3;
+  border-radius: 2px;
+  z-index: 100;
+  pointer-events: none;
+}
+#reshuffleConfirm {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  color: #ff6b6b;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  display: none;
+  z-index: 500;
+  text-align: center;
+}
+#reshuffleConfirm button {
+  margin-top: 10px;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+#message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 30px 50px;
+  border-radius: 20px;
+  font-size: 2rem;
+  color: #ff6b6b;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  display: none;
+  z-index: 1000;
+  animation: popIn 0.3s ease;
+  text-align: center;
+}
+#finalScore {
+  margin-top: 12px;
+  font-size: 1.2rem;
+  color: #444;
+}
+#restartBtn {
+  display: block;
+  margin: 14px auto 0;
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 18px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+#restartBtn:hover {
+  background: #43a047;
+}
+@keyframes popIn {
+  from { transform: translate(-50%, -50%) scale(0); }
+  to { transform: translate(-50%, -50%) scale(1); }
+}

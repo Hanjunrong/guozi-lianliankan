@@ -193,8 +193,8 @@ function findAllPairs() {
     for (var j = 0; j < COLS; j++) {
       if (!board[i][j] || board[i][j] === '') continue;
       for (var ii = i; ii < ROWS; ii++) {
-        for (var jj = 0; jj < COLS; jj++) {
-          if (ii === i && jj <= j) continue;
+        var jjStart = (ii === i) ? j + 1 : 0;
+        for (var jj = jjStart; jj < COLS; jj++) {
           if (!board[ii][jj] || board[ii][jj] === '') continue;
           if (board[i][j] === board[ii][jj]) {
             var path = findPath(i, j, ii, jj);

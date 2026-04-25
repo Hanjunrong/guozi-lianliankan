@@ -12,18 +12,9 @@ if ! command -v node &> /dev/null; then
 fi
 
 echo "检查 JavaScript 语法..."
-node -e "
-var fs = require('fs');
-var html = fs.readFileSync('index.html', 'utf8');
-var match = html.match(/<script src=\"game\.js\"><\/script>[\n\r\s]*<script>([\s\S]*?)<\/script>/);
-if (!match) { throw new Error('无法提取内联脚本'); }
-var script = match[1];
-var open = (script.match(/{/g) || []).length;
-var close = (script.match(/}/g) || []).length;
-if (open !== close) { throw new Error('花括号不匹配: 开放' + open + ', 关闭' + close); }
-new Function(script);
-console.log('语法检查通过');
-"
+node -e "new Function(require('fs').readFileSync('game.js', 'utf8'));"
+node -e "new Function(require('fs').readFileSync('ui.js', 'utf8'));"
+echo "语法检查通过"
 
 if [ $? -ne 0 ]; then
   echo "语法错误，退出"
