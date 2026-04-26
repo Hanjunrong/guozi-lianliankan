@@ -33,6 +33,17 @@ function refreshSfxButton() {
 }
 
 function setupGameUI() {
+  // 先获取可用图片列表，再初始化游戏
+  if (typeof window.fetchAvailableImages === 'function') {
+    window.fetchAvailableImages(function() {
+      doSetupGame();
+    });
+  } else {
+    doSetupGame();
+  }
+}
+
+function doSetupGame() {
   window.initGame();
   board = window.getBoard();
   pairs = window.getPairs();
@@ -51,7 +62,7 @@ function setupGameUI() {
       cell.className = 'cell';
       cell.dataset.row = i;
       cell.dataset.col = j;
-      cell.textContent = board[i][j];
+      cell.innerHTML = '<img src="' + board[i][j] + '" alt="guo">';
       cell.addEventListener('click', onCellClick(i, j));
       cell.addEventListener('mouseenter', onCellEnter(i, j));
       cell.addEventListener('mouseleave', onCellLeave);
@@ -498,7 +509,7 @@ function renderBoard() {
     for (var j = 0; j < COLS; j++) {
       var cell = getCell(i, j);
       if (board[i][j] && board[i][j] !== '') {
-        cell.textContent = board[i][j];
+        cell.innerHTML = '<img src="' + board[i][j] + '" alt="guo">';
         cell.className = 'cell';
       } else {
         cell.innerHTML = '';

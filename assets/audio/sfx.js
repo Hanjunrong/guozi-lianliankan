@@ -65,8 +65,15 @@
   }
 
   function playSuccessSfx() {
-    playTone(760, 0.12, 'triangle', 0.14);
-    setTimeout(function() { playTone(980, 0.16, 'triangle', 0.16); }, 70);
+    if (!sfxEnabled) return;
+    try {
+      var audio = new Audio('assets/audio/yesmola.mp3');
+      audio.volume = 0.8;
+      audio.play();
+    } catch (e) {
+      playTone(760, 0.12, 'triangle', 0.14);
+      setTimeout(function() { playTone(980, 0.16, 'triangle', 0.16); }, 70);
+    }
   }
 
   function playFailSfx() {

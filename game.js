@@ -2,8 +2,69 @@ var ROWS = 10;
 var COLS = 10;
 var ANIMAL_COUNT = 20;
 
-var animals = ['🐑', '🦄', '🐴', '🐶', '🐱', '🐼', '🐨', '🐯', '🦁', '🐸',
-                '🐵', '🦊', '🐰', '🐹', '🐭', '🦝', '🦦', '🦄', '🐧', '🐦'];
+// 所有郭老师图片，运行时动态加载实际存在的文件列表
+// Node.js 环境（测试）直接读目录，浏览器环境通过 /api/images 获取
+var allGuoImages = [];
+
+// 加载实际存在的图片列表（供 Node.js 测试使用）
+function loadAvailableImagesSync() {
+  if (typeof require !== 'undefined') {
+    try {
+      var fs = require('fs');
+      var path = require('path');
+      var dir = path.join(__dirname, 'assets', 'images');
+      var files = fs.readdirSync(dir);
+      var prefix = 'assets/images/';
+      allGuoImages = files.filter(function(f) {
+        return f.endsWith('.webp');
+      }).sort().map(function(f) {
+        return prefix + f;
+      });
+      if (allGuoImages.length >= ANIMAL_COUNT) {
+        return true;
+      }
+    } catch(e) {}
+  }
+  // 回退到硬编码范围
+  allGuoImages = [];
+  for (var i = 1; i <= 70; i++) {
+    allGuoImages.push('assets/images/guo' + i + '.webp');
+  }
+  return allGuoImages.length >= ANIMAL_COUNT;
+}
+loadAvailableImagesSync();
+
+// 浏览器端：异步从 /api/images 加载可用图片列表
+function fetchAvailableImages(callback) {
+  if (typeof XMLHttpRequest === 'undefined') {
+    // Node.js 环境，已经通过 loadAvailableImagesSync 初始化了
+    if (callback) callback(allGuoImages);
+    return;
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/api/images', true);
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      var prefix = 'assets/images/';
+      allGuoImages = data.images.map(function(f) { return prefix + f; });
+      if (allGuoImages.length < ANIMAL_COUNT) {
+        console.warn('可用图片不足' + ANIMAL_COUNT + '张（只有' + allGuoImages.length + '张），使用较少的图片类型');
+      }
+    } else {
+      console.warn('获取图片列表失败，使用回退图片列表');
+    }
+    if (callback) callback(allGuoImages);
+  };
+  xhr.onerror = function() {
+    console.warn('无法连接服务器获取图片列表，使用回退列表');
+    if (callback) callback(allGuoImages);
+  };
+  xhr.send();
+}
+
+// 游戏运行时使用的当前图片集
+var animals = [];
 
 var board = [];
 var selected = null;
@@ -26,11 +87,26 @@ function shuffle(arr) {
   return arr;
 }
 
+function pickRandomImages() {
+  var shuffled = [];
+  for (var i = 0; i < allGuoImages.length; i++) {
+    shuffled.push(allGuoImages[i]);
+  }
+  for (var i = shuffled.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = shuffled[i];
+    shuffled[i] = shuffled[j];
+    shuffled[j] = tmp;
+  }
+  return shuffled.slice(0, ANIMAL_COUNT);
+}
+
 function initGame() {
   var totalCells = ROWS * COLS;
   var pairCount = (totalCells / 2) | 0;
   var tiles = [];
 
+  animals = pickRandomImages();
   var animalsSubset = animals.slice(0, ANIMAL_COUNT);
   var typesUsed = animalsSubset.length;
   var pairsPerType = (pairCount / typesUsed) | 0;
@@ -299,6 +375,8 @@ if (typeof module !== 'undefined' && module.exports) {
   window.COLS = COLS;
   window.ANIMAL_COUNT = ANIMAL_COUNT;
   window.animals = animals;
+  window.allGuoImages = allGuoImages;
+  window.fetchAvailableImages = fetchAvailableImages;
   window.shuffle = shuffle;
   window.initGame = initGame;
   window.findPath = findPath;
