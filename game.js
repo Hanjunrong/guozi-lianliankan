@@ -26,11 +26,10 @@ function loadAvailableImagesSync() {
     } catch(e) {}
   }
   // 回退到硬编码范围
-  allGuoImages = [];
-  for (var i = 1; i <= 70; i++) {
-    allGuoImages.push('assets/images/guo' + i + '.webp');
+  if (typeof XMLHttpRequest !== 'undefined') {
+    allGuoImages = [];
+    return false;
   }
-  return allGuoImages.length >= ANIMAL_COUNT;
 }
 loadAvailableImagesSync();
 

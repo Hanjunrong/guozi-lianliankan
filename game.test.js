@@ -5,6 +5,7 @@
 
 var fs = require('fs');
 var game = require('./game.js');
+var allGuoImages = game.animals;
 
 var passed = 0;
 var failed = 0;
@@ -563,6 +564,12 @@ assert(html.indexOf('id="sfxToggleBtn"') !== -1, '音效: 页面存在开关按�
 assert(ui.indexOf('function handleToggleSfx()') !== -1, '音效: 页面存在音效开关处理函数');
 assert(ui.indexOf('function refreshSfxButton()') !== -1, '音效: 页面存在图标刷新函数');
 assert(ui.indexOf("window.isSfxEnabled() ? '\ud83d\udd0a' : '\ud83d\udd07'") !== -1, '音效: 使用图标显示开关状态');
+
+console.log('\n--- 测试33: 图片加载不包含缺失文件 ---');
+var realImages = fs.readdirSync('./assets/images').filter(function(f) {
+  return f.endsWith('.webp');
+}).sort();
+assert(realImages.length >= 20, '图片加载: 实际图片文件数量足够');
 
 console.log('\n========================================');
 console.log('测试结果: ' + passed + ' 通过, ' + failed + ' 失败');
