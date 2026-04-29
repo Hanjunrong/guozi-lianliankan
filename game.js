@@ -28,7 +28,7 @@ function loadAvailableImagesSync() {
   // 浏览器环境使用静态图片列表
   if (typeof XMLHttpRequest !== 'undefined') {
     var prefix = 'assets/images/';
-    var maxGuo = 69;
+    var maxGuo = 63;
     allGuoImages = [];
     for (var i = 1; i <= maxGuo; i++) {
       allGuoImages.push(prefix + 'guo' + i + '.webp');
