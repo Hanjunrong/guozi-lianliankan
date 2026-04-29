@@ -6,7 +6,7 @@
 
 ## 演示视频
 
-https://github.com/user-attachments/assets/xxxxx-xxxxx-xxxxx
+https://github.com/Hanjunrong/guozi-lianliankan/raw/master/demo.mp4
 
 > 完整游戏演示，包含匹配消除、路径绘制、计时器提示等功能
 
