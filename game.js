@@ -25,10 +25,15 @@ function loadAvailableImagesSync() {
       }
     } catch(e) {}
   }
-  // 回退到硬编码范围
+  // 浏览器环境使用静态图片列表
   if (typeof XMLHttpRequest !== 'undefined') {
+    var prefix = 'assets/images/';
+    var maxGuo = 69;
     allGuoImages = [];
-    return false;
+    for (var i = 1; i <= maxGuo; i++) {
+      allGuoImages.push(prefix + 'guo' + i + '.webp');
+    }
+    return true;
   }
 }
 loadAvailableImagesSync();
